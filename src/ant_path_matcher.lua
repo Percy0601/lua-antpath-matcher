@@ -40,15 +40,18 @@ function ant_path_matcher:match(pattern, url)
         return false
     end
 
-    local m_asterisk_contains = string.match(pattern, "**")
-    local s_asterisk_contains = string.match(pattern, "*")
-    local s_ask_contains = string.match(pattern, "?")
+    local m_asterisk_contains = self:contains(pattern, "**")
+    local s_asterisk_contains = self:contains(pattern, "*")
+    local s_ask_contains = self:contains(pattern, "?")
 
-    if pattern.find then
+end
 
+function ant_path_matcher:contains(input, target)
+    local pos = string.find(input, target)
+    if pos then
+        return true
     end
-
-
+    return false
 end
 
 function ant_path_matcher:split(input, delimiter)
@@ -59,16 +62,11 @@ function ant_path_matcher:split(input, delimiter)
         if not pos then
             break
         end
-        table.insert (arr, string.sub (input, start, pos - 1))
-        start = pos + string.len (delimiter)
+        table.insert(arr, string.sub(input, start, pos - 1))
+        start = pos + string.len(delimiter)
     end
-    table.insert(arr, string.sub (input, start))
+    table.insert(arr, string.sub(input, start))
     return arr
 end
-
-function ant_path_matcher:hello()
-    print("hello 111")
-end
-
 
 return ant_path_matcher

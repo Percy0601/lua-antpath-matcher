@@ -7,7 +7,20 @@ local ant_path_matcher = require("src.ant_path_matcher")
 print("#############")
 
 matcher = ant_path_matcher:instance();
-matcher:hello()
 matcher:match("12", "2")
+
+matcher:split("/test/**/aaa", "**")
+
+local p = "/test/**/aaa"
+--local m_asterisk_contains = string.match(p, "**")
+--local s_asterisk_contains = string.match(p, "*")
+--local s_ask_contains = string.match(p, "?")
+
+local res = matcher:contains(p, "*")
+
+print("=============:" .. tostring(res))
+
+
+
 
 
