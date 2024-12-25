@@ -68,10 +68,18 @@ function ant_path_matcher:ends(input, suffix)
     return suffix == "" or string.sub(input,-string.len(suffix)) == suffix
 end
 
+---starts of prefix
+---@param input
+---@param prefix
+---@return boolean of result
+function ant_path_matcher:starts(input, prefix)
+    return string.sub(input, 1, string.len(prefix)) == prefix
+end
+
 --- split of input
 ---@param input
 ---@param delimiter
----@return array of result
+---@return table of result
 function ant_path_matcher:split(input, delimiter)
     local start = 1
     local arr = {}
