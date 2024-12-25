@@ -11,7 +11,7 @@ matcher:match("12", "2")
 
 matcher:split("/test/**/aaa", "**")
 
-local p = "/test/**/aaa"
+local p = "/test/**/b/**aaa"
 --local m_asterisk_contains = string.match(p, "**")
 --local s_asterisk_contains = string.match(p, "*")
 --local s_ask_contains = string.match(p, "?")
@@ -19,6 +19,15 @@ local p = "/test/**/aaa"
 local res = matcher:contains(p, "*")
 
 print("=============:" .. tostring(res))
+
+local result = matcher:split(p, "**")
+for k, v in ipairs(result) do
+    print("key: " .. v)
+end
+
+res = matcher:ends(p, "aaa")
+print("end: " .. tostring(res))
+
 
 
 

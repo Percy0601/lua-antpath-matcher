@@ -4,7 +4,8 @@
 --- DateTime: 2024/12/25
 ---
 local ant_path_matcher = {}
-
+--- inner function
+--- external use can not care
 function ant_path_matcher:new(o)
     local o = o or {}
     setmetatable(o, ant_path_matcher)
@@ -12,6 +13,8 @@ function ant_path_matcher:new(o)
     return o
 end
 
+--- instance
+--- use: ant_path_matcher:instance()
 function ant_path_matcher:instance()
     if self.single == nil then
         self.single = self:new()
@@ -44,6 +47,9 @@ function ant_path_matcher:match(pattern, url)
     local s_asterisk_contains = self:contains(pattern, "*")
     local s_ask_contains = self:contains(pattern, "?")
 
+
+
+
 end
 
 function ant_path_matcher:contains(input, target)
@@ -54,6 +60,18 @@ function ant_path_matcher:contains(input, target)
     return false
 end
 
+---ends of suffix
+---@param input
+---@param suffix
+---@return boolean of result
+function ant_path_matcher:ends(input, suffix)
+    return suffix == "" or string.sub(input,-string.len(suffix)) == suffix
+end
+
+--- split of input
+---@param input
+---@param delimiter
+---@return array of result
 function ant_path_matcher:split(input, delimiter)
     local start = 1
     local arr = {}
