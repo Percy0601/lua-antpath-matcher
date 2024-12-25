@@ -52,6 +52,48 @@ function ant_path_matcher:match(pattern, url)
 
 end
 
+--- handle multi asterisk (**)
+---@return boolean match or not
+function ant_path_matcher:match_multi_asterisk(pattern, url)
+    if (input == "/**") then
+        return true
+    end
+
+    local arrays = self:split(pattern, "**/")
+    local t = url
+    for k, v in ipairs(arrays) do
+        t = string.sub(t, 1, #v)
+        if (t ~= v) then
+            return false
+        end
+
+
+    end
+
+
+    return false
+end
+
+function ant_path_matcher:handle_match_snippet(pattern, sub)
+    if (pattern == sub) then
+        return true
+    end
+
+
+end
+
+--- handle single asterisk (*)
+---@return boolean match or not
+function ant_path_matcher:match_single_asterisk(pattern, url)
+
+end
+
+--- handle ask symbol (???)
+---@return boolean match or not
+function ant_path_matcher:match_ask_symbol(pattern, url)
+
+end
+
 function ant_path_matcher:contains(input, target)
     local pos = string.find(input, target)
     if pos then

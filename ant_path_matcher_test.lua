@@ -28,7 +28,14 @@ end
 res = matcher:ends(p, "aaa")
 print("end: " .. tostring(res))
 
+result = matcher:split("/a/**/b**", "**/")
+for k, v in ipairs(result) do
+    print("key: " .. v)
+end
 
+local url = "abc"
+local sub = string.sub(url, 1, 2)
+print("sub:" .. string.format("%q", sub) .. "; url: " .. url)
 
 
 
