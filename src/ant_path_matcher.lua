@@ -3,7 +3,12 @@
 --- Created by Percy.
 --- DateTime: 2024/12/25
 ---
+package.cpath = package.cpath .. ';C:/Users/Percy/AppData/Roaming/JetBrains/IdeaIC2024.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
+local dbg = require('emmy_core')
+dbg.tcpConnect('localhost', 9966)
+
 local ant_path_matcher = {}
+
 --- inner function
 --- external use can not care
 function ant_path_matcher:new(o)
@@ -43,23 +48,72 @@ function ant_path_matcher:match(pattern, url)
         return false
     end
 
-    local m_asterisk_contains = self:contains(pattern, "**")
-    local s_asterisk_contains = self:contains(pattern, "*")
-    local s_ask_contains = self:contains(pattern, "?")
+    local url_parts = self:split(url, "/")
+    local pattern_parts = self:split(pattern, "/")
+
+    local pattern_parts_size = self:size(pattern_parts)
+    local url_parts_size = self:size(url_parts)
 
 
+    local g_j = 1
+    for i = 1, pattern_parts_size do
+        for j = g_j, url_parts_size do
+            local current_pattern_part = pattern_parts[i]
+            local current_url_part = url_parts[j]
+            if current_pattern_part == "**" or current_pattern_part == "*" then
+                if (i == pattern_parts_size) then
+                    return true
+                end
 
 
+            elseif self:starts(current_pattern_part, "{") and self:ends(current_pattern_part, "}") then
+                g_j = g_j + 1
+                break
+            else
+                local g_jj = 1
+                local current_pattern_part_size = #current_pattern_part
+                local current_url_part_size = #current_url_part
+                for ii = 1, current_pattern_part_size do
+                    for jj = g_jj, current_url_part_size do
+                        local sub_ii = string.sub(current_pattern_part, ii, ii)
+                        if (sub_ii == "*") then
+                            if (ii == current_url_part_size) then
+                                g_jj = g_jj + 1
+                                break
+                            end
+                            local next_ii = string.sub(current_pattern_part, ii + 1, ii + 1)
+                            local next_jj = string.sub(current_url_part, jj + 1, jj + 1)
+                            if next_ii ~= next_jj then
+                                g_jj = g_jj + 1
+                            end
+                        elseif (sub_ii == "?") then
+                            g_jj = g_jj + 1
+                            break
+                        else
+                            local sub_jj = string.sub(current_url_part, jj, jj)
+                            if (sub_ii ~= sub_jj) then
+                                return false
+                            end
+                        end
+                    end
+                end
+                g_j = g_j + 1
+                break
+            end
+        end
+    end
+
+    return true
 end
 
 --- handle multi asterisk (**)
 ---@return boolean match or not
-function ant_path_matcher:match_multi_asterisk(pattern, url)
-    if (input == "/**") then
+function ant_path_matcher:match_pattern(pattern, url)
+    if (pattern == "/**") then
         return true
     end
 
-    local arrays = self:split(pattern, "**/")
+    local arrays = self:split(pattern, "/**/")
     local t = url
     for k, v in ipairs(arrays) do
         t = string.sub(t, 1, #v)
@@ -72,26 +126,6 @@ function ant_path_matcher:match_multi_asterisk(pattern, url)
 
 
     return false
-end
-
-function ant_path_matcher:handle_match_snippet(pattern, sub)
-    if (pattern == sub) then
-        return true
-    end
-
-
-end
-
---- handle single asterisk (*)
----@return boolean match or not
-function ant_path_matcher:match_single_asterisk(pattern, url)
-
-end
-
---- handle ask symbol (???)
----@return boolean match or not
-function ant_path_matcher:match_ask_symbol(pattern, url)
-
 end
 
 function ant_path_matcher:contains(input, target)
@@ -130,11 +164,40 @@ function ant_path_matcher:split(input, delimiter)
         if not pos then
             break
         end
-        table.insert(arr, string.sub(input, start, pos - 1))
+        local sub = string.sub(input, start, pos - 1)
+        if (sub ~= "") then
+            table.insert(arr, sub)
+        end
+
         start = pos + string.len(delimiter)
     end
-    table.insert(arr, string.sub(input, start))
+    local sub = string.sub(input, start)
+    if (sub ~= "") then
+        table.insert(arr, sub)
+    end
+
     return arr
 end
 
+function ant_path_matcher:size(t)
+    local len=0
+    for k, v in ipairs(t) do
+        len=len + 1
+    end
+    return len;
+end
+
+
+
+
+
+local adb = ant_path_matcher:starts("gasjkdfg", "gas")
+
+print("1111111111111111: ".. tostring(adb))
+
+local compare = ant_path_matcher:match("/bla/**/bla", "/bla/testing/testing/bla")
+print("compare: ".. tostring(compare))
+
 return ant_path_matcher
+
+

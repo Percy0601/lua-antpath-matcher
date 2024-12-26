@@ -28,7 +28,7 @@ end
 res = matcher:ends(p, "aaa")
 print("end: " .. tostring(res))
 
-result = matcher:split("/a/**/b**", "**/")
+result = matcher:split("/a/**/b**", "/**")
 for k, v in ipairs(result) do
     print("key: " .. v)
 end
@@ -36,6 +36,15 @@ end
 local url = "abc"
 local sub = string.sub(url, 1, 2)
 print("sub:" .. string.format("%q", sub) .. "; url: " .. url)
+
+local b, e = string.find("/a/**/b**/**", "/**", 1, true)
+print("begin:" .. b)
+--print("begin:" .. b .. "; end: " .. e)
+local pattern = "/a/**/b**/**"
+url = "/a/adfg/c/jgkd/dfdf"
+
+local compare = matcher:match("/a/**/b**/**", "/a/b/b/a")
+print("compare result: " .. tostring(compare))
 
 
 
