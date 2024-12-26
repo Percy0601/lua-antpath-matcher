@@ -3,9 +3,9 @@
 --- Created by Percy.
 --- DateTime: 2024/12/25
 ---
---package.cpath = package.cpath .. ';C:/Users/Percy/AppData/Roaming/JetBrains/IdeaIC2024.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
---local dbg = require('emmy_core')
---dbg.tcpConnect('localhost', 9966)
+package.cpath = package.cpath .. ';C:/Users/Percy/AppData/Roaming/JetBrains/IdeaIC2024.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
+local dbg = require('emmy_core')
+dbg.tcpConnect('localhost', 9966)
 
 local ant_path_matcher = {}
 
@@ -132,7 +132,11 @@ function ant_path_matcher:match(pattern, url)
                             end
                         elseif (sub_ii == "?") then
                             g_jj = g_jj + 1
-                            break
+                            if(g_jj > current_url_part_size) then
+                                return false
+                            else
+                                break
+                            end
                         else
                             local sub_jj = string.sub(current_url_part, jj, jj)
                             if (sub_ii == sub_jj) then
@@ -212,6 +216,12 @@ function ant_path_matcher:size(t)
     end
     return len;
 end
+
+
+local pattern = "/jd/a*c"
+local url = "/jd/a"
+local compare = ant_path_matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
 
 return ant_path_matcher
 

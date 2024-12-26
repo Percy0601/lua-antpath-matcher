@@ -37,5 +37,29 @@ pattern = "/jd/a?c"
 url = "/jd/axyzc"
 compare = matcher:match(pattern, url)
 print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
 -----------------------------------------------------
+--- 统配符： *
+
+pattern = "/jd/a*c"
+url = "/jd/ac"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+
+pattern = "/jd/a*c"
+url = "/jd/abc"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+
+pattern = "/jd/a*c"
+url = "/jd//axyzc"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+pattern = "/jd/a*c"
+url = "/jd/a"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
 
