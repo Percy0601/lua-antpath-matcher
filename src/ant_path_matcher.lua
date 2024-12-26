@@ -32,17 +32,14 @@ function ant_path_matcher:match(pattern, url)
         print("pattern must be string!")
         return false
     end
-
     if #pattern < 1 then
         print("pattern length not empty!")
         return false
     end
-
     if type(url) ~= "string" then
         print("url must be string")
         return false
     end
-
     if #url < 1 then
         print("url length not empty!")
         return false
@@ -50,10 +47,8 @@ function ant_path_matcher:match(pattern, url)
 
     local url_parts = self:split(url, "/")
     local pattern_parts = self:split(pattern, "/")
-
     local pattern_parts_size = self:size(pattern_parts)
     local url_parts_size = self:size(url_parts)
-
 
     local g_j = 1
     for i = 1, pattern_parts_size do
@@ -68,7 +63,6 @@ function ant_path_matcher:match(pattern, url)
                     if next_max_i > pattern_parts_size then
                         next_max_i = pattern_parts_size
                     end
-
                     local next_max_j = j + 1
                     if next_max_j > url_parts_size then
                         next_max_j = url_parts_size
@@ -115,7 +109,6 @@ function ant_path_matcher:match(pattern, url)
                             if next_ii_max > current_pattern_part_size then
                                 next_ii_max = current_pattern_part_size
                             end
-
                             local next_jj_max = jj + 1
                             if next_jj_max > current_url_part_size then
                                 next_jj_max = current_url_part_size
@@ -148,8 +141,6 @@ function ant_path_matcher:match(pattern, url)
                             else
                                 return false
                             end
-
-
                         end
                     end
                 end
@@ -158,10 +149,8 @@ function ant_path_matcher:match(pattern, url)
             end
         end
     end
-
     return true
 end
-
 
 function ant_path_matcher:contains(input, target)
     local pos = string.find(input, target)
