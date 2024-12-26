@@ -63,3 +63,19 @@ url = "/jd/a"
 compare = matcher:match(pattern, url)
 print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
 
+pattern = "/jd/a*c"
+url = "/jd/xc"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+pattern = "/jd/a*c"
+url = "/jd/ac"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+pattern = "/jd/*/abc"
+url = "/jd/d/abc"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+

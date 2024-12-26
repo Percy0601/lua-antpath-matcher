@@ -107,7 +107,7 @@ function ant_path_matcher:match(pattern, url)
                     for jj = g_jj, current_url_part_size do
                         local sub_ii = string.sub(current_pattern_part, ii, ii)
                         if (sub_ii == "*") then
-                            if (ii == current_url_part_size) then
+                            if (ii == current_pattern_part_size) then
                                 g_jj = g_jj + 1
                                 break
                             end
@@ -140,11 +140,16 @@ function ant_path_matcher:match(pattern, url)
                         else
                             local sub_jj = string.sub(current_url_part, jj, jj)
                             if (sub_ii == sub_jj) then
+                                if(g_jj > current_url_part_size) then
+                                    return false
+                                end
                                 g_jj = g_jj + 1
                                 break
                             else
                                 return false
                             end
+
+
                         end
                     end
                 end
@@ -218,9 +223,15 @@ function ant_path_matcher:size(t)
 end
 
 
-local pattern = "/jd/a*c"
-local url = "/jd/a"
-local compare = ant_path_matcher:match(pattern, url)
+--local pattern = "/jd/a*c"
+--local url = "/jd/a"
+--local compare = ant_path_matcher:match(pattern, url)
+--print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+
+pattern = "/jd/*/abc"
+url = "/jd/d/abc"
+compare = ant_path_matcher:match(pattern, url)
 print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
 
 return ant_path_matcher
