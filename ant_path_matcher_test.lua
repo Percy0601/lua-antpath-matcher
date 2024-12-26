@@ -7,45 +7,35 @@ local ant_path_matcher = require("src.ant_path_matcher")
 print("#############")
 
 matcher = ant_path_matcher:instance();
-matcher:match("12", "2")
 
-matcher:split("/test/**/aaa", "**")
+local result = matcher:contains("hello world", "world")
+print("############:" .. tostring(result))
 
-local p = "/test/**/b/**aaa"
---local m_asterisk_contains = string.match(p, "**")
---local s_asterisk_contains = string.match(p, "*")
---local s_ask_contains = string.match(p, "?")
+local adb = matcher:starts("gasjkdfg", "gas")
 
-local res = matcher:contains(p, "*")
+print("1111111111111111: " .. tostring(adb))
 
-print("=============:" .. tostring(res))
+--local compare = matcher:match("/bla/**/bla", "/bla/testing/testing/bla")
+--print("compare: ".. tostring(compare))
 
-local result = matcher:split(p, "**")
-for k, v in ipairs(result) do
-    print("key: " .. v)
-end
+local pattern = "/bla/**/bla"
+local url = "/bla/testing/testing/bla"
+compare = matcher:match("/bla/**/bla", "/bla/testing/testing/bla")
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+--- 通配符： ?
+pattern = "/jd/a?c"
+url = "/jd/abc"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
 
-res = matcher:ends(p, "aaa")
-print("end: " .. tostring(res))
+pattern = "/jd/a?c"
+url = "/jd/ac"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
 
-result = matcher:split("/a/**/b**", "/**")
-for k, v in ipairs(result) do
-    print("key: " .. v)
-end
-
-local url = "abc"
-local sub = string.sub(url, 1, 2)
-print("sub:" .. string.format("%q", sub) .. "; url: " .. url)
-
-local b, e = string.find("/a/**/b**/**", "/**", 1, true)
-print("begin:" .. b)
---print("begin:" .. b .. "; end: " .. e)
-local pattern = "/a/**/b**/**"
-url = "/a/adfg/c/jgkd/dfdf"
-
-local compare = matcher:match("/a/**/b**/**", "/a/b/b/a")
-print("compare result: " .. tostring(compare))
-
-
-
+pattern = "/jd/a?c"
+url = "/jd/axyzc"
+compare = matcher:match(pattern, url)
+print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+-----------------------------------------------------
 

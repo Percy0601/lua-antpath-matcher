@@ -3,10 +3,9 @@
 --- Created by Percy.
 --- DateTime: 2024/12/25
 ---
-package.cpath = package.cpath .. ';C:/Users/Percy/AppData/Roaming/JetBrains/IdeaIC2024.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
-local dbg = require('emmy_core')
-dbg.tcpConnect('localhost', 9966)
-
+--package.cpath = package.cpath .. ';C:/Users/Percy/AppData/Roaming/JetBrains/IdeaIC2024.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
+--local dbg = require('emmy_core')
+--dbg.tcpConnect('localhost', 9966)
 
 local ant_path_matcher = {}
 
@@ -112,14 +111,24 @@ function ant_path_matcher:match(pattern, url)
                                 g_jj = g_jj + 1
                                 break
                             end
-                            local next_ii = string.sub(current_pattern_part, ii + 1, ii + 1)
-                            local next_jj = string.sub(current_url_part, jj + 1, jj + 1)
+                            local next_ii_max = ii + 1
+                            if next_ii_max > current_pattern_part_size then
+                                next_ii_max = current_pattern_part_size
+                            end
 
-                            if next_ii == next_jj then
-                                g_jj = g_jj + 1
-                            else
+                            local next_jj_max = jj + 1
+                            if next_jj_max > current_url_part_size then
+                                next_jj_max = current_url_part_size
+                            end
+
+                            local next_pattern_part = string.sub(current_pattern_part, next_ii_max, next_ii_max)
+                            local next_url_part = string.sub(current_url_part, next_jj_max, next_jj_max)
+
+                            if next_pattern_part == next_url_part then
                                 g_jj = g_jj + 1
                                 break
+                            else
+                                g_jj = g_jj + 1
                             end
                         elseif (sub_ii == "?") then
                             g_jj = g_jj + 1
@@ -138,7 +147,7 @@ function ant_path_matcher:match(pattern, url)
                 g_j = g_j + 1
                 break
             end
-            end
+        end
     end
 
     return true
@@ -203,17 +212,6 @@ function ant_path_matcher:size(t)
     end
     return len;
 end
-
-
-
-
-
-local adb = ant_path_matcher:starts("gasjkdfg", "gas")
-
-print("1111111111111111: ".. tostring(adb))
-
-local compare = ant_path_matcher:match("/bla/**/bla", "/bla/testing/testing/bla")
-print("compare: ".. tostring(compare))
 
 return ant_path_matcher
 
