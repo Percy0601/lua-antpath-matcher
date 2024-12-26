@@ -7,6 +7,7 @@ package.cpath = package.cpath .. ';C:/Users/Percy/AppData/Roaming/JetBrains/Idea
 local dbg = require('emmy_core')
 dbg.tcpConnect('localhost', 9966)
 
+
 local ant_path_matcher = {}
 
 --- inner function
@@ -60,12 +61,42 @@ function ant_path_matcher:match(pattern, url)
         for j = g_j, url_parts_size do
             local current_pattern_part = pattern_parts[i]
             local current_url_part = url_parts[j]
-            if current_pattern_part == "**" or current_pattern_part == "*" then
+            if current_pattern_part == "**" then
                 if (i == pattern_parts_size) then
                     return true
+                else
+                    local next_max_i = i + 1
+                    if next_max_i > pattern_parts_size then
+                        next_max_i = pattern_parts_size
+                    end
+
+                    local next_max_j = j + 1
+                    if next_max_j > url_parts_size then
+                        next_max_j = url_parts_size
+                    end
+
+                    local next_pattern_part = pattern_parts[next_max_i]
+                    local next_url_part = url_parts[next_max_j]
+                    local prefix_next_pattern_part = string.sub(next_pattern_part, 1, 1)
+                    local prefix_next_url_part = string.sub(next_url_part, 1, 1)
+
+                    if (prefix_next_pattern_part == prefix_next_url_part) then
+                        g_j = g_j + 1
+                        break
+                    else
+                        g_j = g_j + 1
+                    end
                 end
-
-
+            elseif current_pattern_part == "*" then
+                g_j = g_j + 1
+                break
+            elseif current_pattern_part == "?" then
+                if(#current_url_part == 1) then
+                    g_j = g_j + 1
+                    break
+                else
+                    return false
+                end
             elseif self:starts(current_pattern_part, "{") and self:ends(current_pattern_part, "}") then
                 g_j = g_j + 1
                 break
@@ -83,15 +114,22 @@ function ant_path_matcher:match(pattern, url)
                             end
                             local next_ii = string.sub(current_pattern_part, ii + 1, ii + 1)
                             local next_jj = string.sub(current_url_part, jj + 1, jj + 1)
-                            if next_ii ~= next_jj then
+
+                            if next_ii == next_jj then
                                 g_jj = g_jj + 1
+                            else
+                                g_jj = g_jj + 1
+                                break
                             end
                         elseif (sub_ii == "?") then
                             g_jj = g_jj + 1
                             break
                         else
                             local sub_jj = string.sub(current_url_part, jj, jj)
-                            if (sub_ii ~= sub_jj) then
+                            if (sub_ii == sub_jj) then
+                                g_jj = g_jj + 1
+                                break
+                            else
                                 return false
                             end
                         end
@@ -100,33 +138,12 @@ function ant_path_matcher:match(pattern, url)
                 g_j = g_j + 1
                 break
             end
-        end
+            end
     end
 
     return true
 end
 
---- handle multi asterisk (**)
----@return boolean match or not
-function ant_path_matcher:match_pattern(pattern, url)
-    if (pattern == "/**") then
-        return true
-    end
-
-    local arrays = self:split(pattern, "/**/")
-    local t = url
-    for k, v in ipairs(arrays) do
-        t = string.sub(t, 1, #v)
-        if (t ~= v) then
-            return false
-        end
-
-
-    end
-
-
-    return false
-end
 
 function ant_path_matcher:contains(input, target)
     local pos = string.find(input, target)
