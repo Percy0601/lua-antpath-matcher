@@ -71,11 +71,11 @@ print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare
 pattern = "/jd/a*c"
 url = "/jd/ac"
 compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+print("pattern: " .. pattern ..", url: " .. url ..". compare: ".. tostring(compare))
 
-pattern = "/jd/*/abc"
-url = "/jd/d/abc"
+pattern = "/**/abc.html"
+url = "/a/abc"
 compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+print("pattern: " .. pattern ..", url: " .. url ..". compare: ".. tostring(compare))
 
 

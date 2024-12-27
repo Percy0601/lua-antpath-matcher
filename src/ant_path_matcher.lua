@@ -73,6 +73,9 @@ function ant_path_matcher:match(pattern, url)
                     if(next_max_i == pattern_parts_size) then
                         if(next_pattern_part == "**" or next_pattern_part == "*") then
                             return true
+                        else
+                            g_j = g_j + 1
+                            break
                         end
                     else
                         local prefix_next_pattern_part = string.sub(next_pattern_part, 1, 1)
@@ -139,15 +142,16 @@ function ant_path_matcher:match(pattern, url)
                         else
                             local sub_jj = string.sub(current_url_part, jj, jj)
                             if (sub_ii == sub_jj) then
-                                if(g_jj > current_url_part_size) then
-                                    return false
-                                end
                                 g_jj = g_jj + 1
                                 break
                             else
                                 return false
                             end
                         end
+                    end
+
+                    if (g_jj == current_url_part_size) and ii < current_pattern_part_size then
+                        return false
                     end
                 end
                 g_j = g_j + 1
@@ -241,12 +245,14 @@ end
 --print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
 
 
-pattern = "/**/abc"
-url = "/jd/d/1213"
+--pattern = "/**/abc"
+--url = "/jd/d/1213"
+--compare = ant_path_matcher:match(pattern, url)
+--print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+pattern = "/**/abc.html"
+url = "/a/abc"
 compare = ant_path_matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
-
-
+print("pattern: " .. pattern ..", url: " .. url ..". compare: ".. tostring(compare))
 return ant_path_matcher
 
 
