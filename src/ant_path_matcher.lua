@@ -249,10 +249,13 @@ end
 --url = "/jd/d/1213"
 --compare = ant_path_matcher:match(pattern, url)
 --print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
-pattern = "/**/abc.html"
-url = "/a/abc"
-compare = ant_path_matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url: " .. url ..". compare: ".. tostring(compare))
+
+--pattern = "/**/abc.html"
+--url = "/a/abc"
+--compare = ant_path_matcher:match(pattern, url)
+--print("pattern: " .. pattern ..", url: " .. url ..". compare: ".. tostring(compare))
+
+
 return ant_path_matcher
 
 

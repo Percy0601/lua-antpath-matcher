@@ -4,16 +4,7 @@
 --- DateTime: 2024/12/25
 ---
 local ant_path_matcher = require("src.ant_path_matcher")
-print("#############")
-
 matcher = ant_path_matcher:instance();
-
-local result = matcher:contains("hello world", "world")
-print("############:" .. tostring(result))
-
-local adb = matcher:starts("gasjkdfg", "gas")
-
-print("1111111111111111: " .. tostring(adb))
 
 --local compare = matcher:match("/bla/**/bla", "/bla/testing/testing/bla")
 --print("compare: ".. tostring(compare))
