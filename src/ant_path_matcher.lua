@@ -67,17 +67,23 @@ function ant_path_matcher:match(pattern, url)
                     if next_max_j > url_parts_size then
                         next_max_j = url_parts_size
                     end
-
                     local next_pattern_part = pattern_parts[next_max_i]
                     local next_url_part = url_parts[next_max_j]
-                    local prefix_next_pattern_part = string.sub(next_pattern_part, 1, 1)
-                    local prefix_next_url_part = string.sub(next_url_part, 1, 1)
 
-                    if (prefix_next_pattern_part == prefix_next_url_part) then
-                        g_j = g_j + 1
-                        break
+                    if(next_max_i == pattern_parts_size) then
+                        if(next_pattern_part == "**" or next_pattern_part == "*") then
+                            return true
+                        end
                     else
-                        g_j = g_j + 1
+                        local prefix_next_pattern_part = string.sub(next_pattern_part, 1, 1)
+                        local prefix_next_url_part = string.sub(next_url_part, 1, 1)
+
+                        if (prefix_next_pattern_part == prefix_next_url_part) then
+                            g_j = g_j + 1
+                            break
+                        else
+                            g_j = g_j + 1
+                        end
                     end
                 end
             elseif current_pattern_part == "*" then
@@ -218,10 +224,28 @@ end
 --print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
 
 
-pattern = "/jd/*/abc"
-url = "/jd/d/abc"
+--pattern = "/jd/*/abc"
+--url = "/jd/d/abc"
+--compare = ant_path_matcher:match(pattern, url)
+--print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+
+--pattern = "/jd/**/abc"
+--url = "/jd/d/abc"
+--compare = ant_path_matcher:match(pattern, url)
+--print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+--
+--pattern = "/jd/**/abc"
+--url = "/jd/d/abc/8686.html"
+--compare = ant_path_matcher:match(pattern, url)
+--print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
+
+pattern = "/**/abc"
+url = "/jd/d/1213"
 compare = ant_path_matcher:match(pattern, url)
 print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+
 
 return ant_path_matcher
 
