@@ -3,9 +3,9 @@
 --- Created by Percy.
 --- DateTime: 2024/12/25
 ---
-package.cpath = package.cpath .. ';C:/Users/Percy/AppData/Roaming/JetBrains/IdeaIC2024.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
-local dbg = require('emmy_core')
-dbg.tcpConnect('localhost', 9966)
+--package.cpath = package.cpath .. ';C:/Users/Percy/AppData/Roaming/JetBrains/IdeaIC2024.3/plugins/EmmyLua/debugger/emmy/windows/x64/?.dll'
+--local dbg = require('emmy_core')
+--dbg.tcpConnect('localhost', 9966)
 
 local ant_path_matcher = {}
 
@@ -40,10 +40,6 @@ function ant_path_matcher:match(pattern, url)
         print("url must be string")
         return false
     end
-    if #url < 1 then
-        print("url length not empty!")
-        return false
-    end
 
     local url_parts = self:split(url, "/")
     local pattern_parts = self:split(pattern, "/")
@@ -75,7 +71,6 @@ function ant_path_matcher:match(pattern, url)
                             return true
                         else
                             g_j = g_j + 1
-                            break
                         end
                     else
                         local prefix_next_pattern_part = string.sub(next_pattern_part, 1, 1)
@@ -107,8 +102,19 @@ function ant_path_matcher:match(pattern, url)
                 local current_pattern_part_size = #current_pattern_part
                 local current_url_part_size = #current_url_part
                 for ii = 1, current_pattern_part_size do
+                    local sub_ii = string.sub(current_pattern_part, ii, ii)
                     for jj = g_jj, current_url_part_size do
-                        local sub_ii = string.sub(current_pattern_part, ii, ii)
+                        local sub_jj = string.sub(current_url_part, jj, jj)
+
+                        if(jj == current_url_part_size and ii < current_pattern_part_size) then
+                            local last_sub_ii = string.sub(current_pattern_part, ii, current_url_part_size)
+                            local other_char_parts  = self:split(last_sub_ii, "*")
+                            local other_char_parts_size = self:size(other_char_parts)
+                            if(other_char_parts_size > 0) then
+                                return false
+                            end
+                        end
+
                         if (sub_ii == "*") then
                             if (ii == current_pattern_part_size) then
                                 g_jj = g_jj + 1
@@ -134,13 +140,8 @@ function ant_path_matcher:match(pattern, url)
                             end
                         elseif (sub_ii == "?") then
                             g_jj = g_jj + 1
-                            if(g_jj > current_url_part_size) then
-                                return false
-                            else
-                                break
-                            end
+                            break
                         else
-                            local sub_jj = string.sub(current_url_part, jj, jj)
                             if (sub_ii == sub_jj) then
                                 g_jj = g_jj + 1
                                 break
@@ -148,10 +149,6 @@ function ant_path_matcher:match(pattern, url)
                                 return false
                             end
                         end
-                    end
-
-                    if (g_jj == current_url_part_size) and ii < current_pattern_part_size then
-                        return false
                     end
                 end
                 g_j = g_j + 1
@@ -214,47 +211,18 @@ function ant_path_matcher:split(input, delimiter)
 end
 
 function ant_path_matcher:size(t)
-    local len=0
+    local len = 0
     for k, v in ipairs(t) do
-        len=len + 1
+        len = len + 1
     end
     return len;
 end
 
-
---local pattern = "/jd/a*c"
---local url = "/jd/a"
---local compare = ant_path_matcher:match(pattern, url)
---print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
-
-
---pattern = "/jd/*/abc"
---url = "/jd/d/abc"
---compare = ant_path_matcher:match(pattern, url)
---print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
-
-
---pattern = "/jd/**/abc"
---url = "/jd/d/abc"
---compare = ant_path_matcher:match(pattern, url)
---print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
---
---pattern = "/jd/**/abc"
---url = "/jd/d/abc/8686.html"
---compare = ant_path_matcher:match(pattern, url)
---print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
-
-
---pattern = "/**/abc"
---url = "/jd/d/1213"
---compare = ant_path_matcher:match(pattern, url)
---print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
-
---pattern = "/**/abc.html"
---url = "/a/abc"
---compare = ant_path_matcher:match(pattern, url)
---print("pattern: " .. pattern ..", url: " .. url ..". compare: ".. tostring(compare))
-
+pattern = "te??"
+url = "test"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
 
 return ant_path_matcher
 

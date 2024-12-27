@@ -4,69 +4,115 @@
 --- DateTime: 2024/12/25
 ---
 local ant_path_matcher = require("src.ant_path_matcher")
-matcher = ant_path_matcher:instance();
-
---local compare = matcher:match("/bla/**/bla", "/bla/testing/testing/bla")
---print("compare: ".. tostring(compare))
+ant_path_matcher = ant_path_matcher:instance();
 
 local pattern = "/bla/**/bla"
 local url = "/bla/testing/testing/bla"
-compare = matcher:match("/bla/**/bla", "/bla/testing/testing/bla")
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
---- 通配符： ?
+local compare = ant_path_matcher:match(pattern, url)
+local expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
 pattern = "/jd/a?c"
 url = "/jd/abc"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
 
 pattern = "/jd/a?c"
 url = "/jd/ac"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+compare = ant_path_matcher:match(pattern, url)
+expect = false
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
 
 pattern = "/jd/a?c"
 url = "/jd/axyzc"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
-
------------------------------------------------------
---- 统配符： *
+compare = ant_path_matcher:match(pattern, url)
+expect = false
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
 
 pattern = "/jd/a*c"
 url = "/jd/ac"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
 
 
 pattern = "/jd/a*c"
 url = "/jd/abc"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
 
 
 pattern = "/jd/a*c"
-url = "/jd//axyzc"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+url = "/jd/axyzc"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
 
 pattern = "/jd/a*c"
 url = "/jd/a"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+compare = ant_path_matcher:match(pattern, url)
+expect = false
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
 
-pattern = "/jd/a*c"
-url = "/jd/xc"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url" .. url ..". compare: ".. tostring(compare))
+pattern = "**"
+url = ""
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
 
-pattern = "/jd/a*c"
-url = "/jd/ac"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url: " .. url ..". compare: ".. tostring(compare))
 
-pattern = "/**/abc.html"
-url = "/a/abc"
-compare = matcher:match(pattern, url)
-print("pattern: " .. pattern ..", url: " .. url ..". compare: ".. tostring(compare))
+pattern = "test"
+url = "test"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
+pattern = "/test"
+url = "/test"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
+
+pattern = "https://example.org"
+url = "https://example.org"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
+
+pattern = "/test.jpg"
+url = "test.jpg"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
+pattern = "t?st"
+url = "test"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
+pattern = "??st"
+url = "test"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
+pattern = "tes?"
+url = "test"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
+pattern = "te??"
+url = "test"
+compare = ant_path_matcher:match(pattern, url)
+expect = true
+print("pattern: " .. pattern ..", url: " .. url ..", compare: " .. tostring(compare) .. ", expect: " .. tostring(expect) .. " | approved: " .. tostring(expect == compare))
+
 
 
