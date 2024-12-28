@@ -7,3 +7,20 @@
 for i = 1, 10 do
     print("===:" .. i)
 end
+
+local str = "hello world"
+local b, e = string.find(str, "hello")
+print("begin: " .. b .. ", end:" .. e)
+
+local sub = string.sub(str, e)
+print("sub: " .. sub)
+
+
+str = "blaaaaaa"
+b, e = string.find(str, "aaa", 1)
+print("begin: " .. b .. ", end:" .. e)
+
+
+b, e = string.find(str, "aaa", -#str)
+
+print("begin: " .. b .. ", end:" .. e)
